@@ -25,10 +25,6 @@
 
 package com.sonyericsson.jenkins.plugins.bfa;
 
-import com.sonyericsson.jenkins.plugins.bfa.db.KnowledgeBase;
-import com.sonyericsson.jenkins.plugins.bfa.db.LocalFileKnowledgeBase;
-import com.sonyericsson.jenkins.plugins.bfa.model.FailureCause;
-import com.sonyericsson.jenkins.plugins.bfa.model.ScannerJobProperty;
 import hudson.ExtensionList;
 import hudson.Plugin;
 import hudson.PluginManager;
@@ -40,14 +36,19 @@ import hudson.model.Hudson;
 import hudson.security.Permission;
 import hudson.security.PermissionGroup;
 import hudson.util.CopyOnWriteList;
-import net.sf.json.JSONObject;
-import hudson.tasks.Mailer;
-import org.kohsuke.stapler.Stapler;
-import org.kohsuke.stapler.StaplerRequest;
 
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import net.sf.json.JSONObject;
+
+import org.kohsuke.stapler.StaplerRequest;
+
+import com.sonyericsson.jenkins.plugins.bfa.db.KnowledgeBase;
+import com.sonyericsson.jenkins.plugins.bfa.db.LocalFileKnowledgeBase;
+import com.sonyericsson.jenkins.plugins.bfa.model.FailureCause;
+import com.sonyericsson.jenkins.plugins.bfa.model.ScannerJobProperty;
 
 /**
  * The main thing.
@@ -205,7 +206,11 @@ public class PluginImpl extends Plugin {
      * @return a URL to the image.
      */
 	public static String getFullImageUrl(String size, String name) {
-		return Hudson.getInstance().getRootUrl() + getImageUrl(size, name);
+		String imageUrl = getImageUrl(size, name);
+		if (imageUrl.startsWith("/")) {
+			imageUrl = imageUrl.substring(1);
+		}
+		return Hudson.getInstance().getRootUrl() + imageUrl;
 	}
 
     /**
